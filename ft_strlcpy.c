@@ -1,25 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_strlcpy.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ehasalu <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/24 11:51:51 by ehasalu           #+#    #+#             */
-/*   Updated: 2023/01/24 16:45:13 by ehasalu          ###   ########.fr       */
+/*   Created: 2023/01/13 16:52:11 by ehasalu           #+#    #+#             */
+/*   Updated: 2023/01/13 16:52:11 by ehasalu          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <fcntl.h>
-#include "get_next_line.h"
-char	*trim_side(char *buf, int side);
+#include "libft.h"
 
-int	main(void)
+size_t	ft_strlcpy(char *dst, const char *src, size_t size)
 {
-	int	fd;
+	size_t	i;
 
-	fd = open("textfile.txt", O_RDONLY);
-	printf("%s", get_next_line(fd));
-	printf("%s", get_next_line(fd));
+	if (size == 0)
+		return (ft_strlen(src));
+	i = 0;
+	while (src[i] && i != size - 1)
+	{
+		dst[i] = src[i];
+		i++;
+	}
+	dst[i] = '\0';
+	return (ft_strlen(src));
 }
