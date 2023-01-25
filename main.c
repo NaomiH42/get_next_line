@@ -5,21 +5,19 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: ehasalu <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/24 11:51:51 by ehasalu           #+#    #+#             */
-/*   Updated: 2023/01/24 16:45:13 by ehasalu          ###   ########.fr       */
+/*   Created: 2023/01/25 14:30:14 by ehasalu           #+#    #+#             */
+/*   Updated: 2023/01/25 16:02:50 by ehasalu          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
 #include <fcntl.h>
 #include "get_next_line.h"
-char	*trim_side(char *buf, int side);
+#include <stdio.h>
 
 int	main(void)
 {
-	int	fd;
+	int	fd1;
 
-	fd = open("textfile.txt", O_RDONLY);
-	printf("%s", get_next_line(fd));
-	printf("%s", get_next_line(fd));
+	fd1 = open("text.txt", O_RDONLY);
+	get_next_line(fd1);
 }
