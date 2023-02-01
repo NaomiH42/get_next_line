@@ -6,12 +6,25 @@
 /*   By: ehasalu <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/24 22:49:08 by ehasalu           #+#    #+#             */
-/*   Updated: 2023/01/25 18:42:56 by ehasalu          ###   ########.fr       */
+/*   Updated: 2023/02/01 21:47:30 by ehasalu          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+char	*ft_strrchr(char *s, int c)
+{
+	int	i;
 
+	i = 0;
+//	i = ft_strlen(s);
+	while (s[i])
+	{
+		if (s[i] == (char)c)
+			return ((char *)(s + i));
+		i++;
+	}
+	return (NULL);
+}
 char	*trim(char *line)
 {
 	size_t	l;
@@ -24,8 +37,7 @@ char	*trim(char *line)
 		i++;
 	if (line[i] == '\n')
 		i++;
-	trimmed = (char *)malloc(sizeof(char) * (ft_strlen(line) - i + 1));
-	ft_memset(trimmed, 0, sizeof(char) * (ft_strlen(line) - i));
+	trimmed = (char *)ft_calloc(sizeof(char), (ft_strlen(line) - i + 1));
 	if (!trimmed)
 		return (line);
 	while (line[i])
@@ -48,35 +60,45 @@ char	*cut_extra(char *line)
 	i = 0;
 	while (line[i] && line[i] != '\n')
 		i++;
-	ret = (char *)malloc(sizeof(char) * (i + 2));
-	ft_memset(ret, 0, sizeof(char) * (i + 2));
+	ret = (char *)ft_calloc(sizeof(char), (i + 2));
+	//ft_memset(ret, 0, sizeof(char) * (i + 2));
 	while (l <= i)
 	{
 		ret[l] = line[l];
 		l++;
 	}
 	ret[l] = '\0';
-	free(line);
+//	free(line);
 	return (ret);
 }
 
+#include <stdio.h>
 char	*read_fd(char **buffer, int fd)
 {
 	int	bytes;
 	char	*line;
+	char	*temp;
 
 	line = ft_strdup("");
 	line = ft_strjoin(line, *buffer);
-	line = trim(line);
-	bytes = read(fd ,*buffer, BUFFER_SIZE);
-	while (ft_strchr(*buffer, '\n') == NULL && bytes >= 0)
+	temp = (char *)ft_calloc(sizeof(char), (BUFFER_SIZE + 1));
+	if (!temp)
+		return (NULL);
+	while (ft_strchr(*buffer, '\n') == NULL)
 	{
-		line = ft_strjoin(line, *buffer);
-		bytes = read(fd ,*buffer, BUFFER_SIZE);
-	}		
-	line = ft_strjoin(line, *buffer);
-	if (bytes <= 0)
-		*buffer = line;
+		bytes = read(fd ,temp, BUFFER_SIZE);
+		if (bytes <= 0)
+			return(cut_extra(line));
+		temp[bytes] = '\0';
+		line = ft_strjoin(line, temp);
+		if (buffer != NULL)
+		{
+			free(*buffer);
+			*buffer = ft_strdup("");
+		}
+		*buffer = ft_strjoin(*buffer, temp);
+	}
+	free(temp);
 	return (cut_extra(line));
 }
 
@@ -84,13 +106,14 @@ char	*get_next_line(int fd)
 {
 	static char	*buf[2048];
 	char	*line;
-	
+
+	if (fd < 0 || BUFFER_SIZE <= 0 || fd > 256)
+		return (NULL);
 	if (!buf[fd])
 	{
-		buf[fd] = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));	
-		ft_memset(buf[fd], 0, (sizeof(char) * (BUFFER_SIZE + 1)));
+		buf[fd] = (char *)ft_calloc(sizeof(char), (BUFFER_SIZE + 1));	
 	}
 	line = read_fd(&buf[fd], fd);
+	buf[fd] = trim(buf[fd]);//ft_strrchr(buf[fd], '\n');
 	return (line);
-	
 }

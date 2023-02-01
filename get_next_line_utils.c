@@ -6,13 +6,33 @@
 /*   By: ehasalu <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/25 14:43:42 by ehasalu           #+#    #+#             */
-/*   Updated: 2023/01/25 18:43:15 by ehasalu          ###   ########.fr       */
+/*   Updated: 2023/02/01 21:49:21 by ehasalu          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*ft_strchr(const char *s, int c)
+void	*ft_calloc(size_t nmemb, size_t size)
+{
+	void	*temp;
+	size_t	test;
+
+	if (nmemb == 0 || size == 0)
+	{
+		temp = malloc(0);
+		return (temp);
+	}
+	test = nmemb * size;
+	if (test / nmemb != size)
+		return (NULL);
+	temp = malloc(size * nmemb);
+	if (!temp)
+		return (NULL);
+	ft_memset(temp, 0, size * nmemb);
+	return (temp);
+}
+
+char	*ft_strchr(char *s, int c)
 {
 	while (*s)
 	{
@@ -25,12 +45,12 @@ char	*ft_strchr(const char *s, int c)
 	return (NULL);
 }
 
-size_t	ft_strlen(const char *s)
+size_t	ft_strlen(char *s)
 {
 	size_t	i;
 
 	i = 0;
-	if (!s || !s[i])
+	if (!s)
 		return (i);
 	while (s[i])
 		i++;
@@ -39,16 +59,11 @@ size_t	ft_strlen(const char *s)
 
 char	*ft_strjoin(char *s1, char *s2)
 {
-	size_t	len1;
-	size_t	len2;
 	size_t	i;
 	char	*res;
 
 	i = 0;
-	len1 = ft_strlen(s1);
-	len2 = ft_strlen(s2);
-	res = (char *)malloc(sizeof(char) * (len1 + len2 + 1));
-	ft_memset(res, 0,  sizeof(char) * (len1 + len2 + 1));
+	res = (char *)ft_calloc(sizeof(char), (ft_strlen(s1) + ft_strlen(s2) + 1));
 	if (!res)
 		return (NULL);
 	while (*s1)
@@ -64,11 +79,11 @@ char	*ft_strjoin(char *s1, char *s2)
 		s2++;
 	}
 	res[i] = '\0';
-	//free (s1);
+//	free (s1);
 	return (res);
 }
 
-char	*ft_strdup(const char *s)
+char	*ft_strdup(char *s)
 {
 	size_t	i;
 	size_t	len;
@@ -76,7 +91,7 @@ char	*ft_strdup(const char *s)
 
 	len = ft_strlen(s);
 	i = 0;
-	dest = (char *)malloc(sizeof(char) * (len + 1));
+	dest = (char *)ft_calloc(sizeof(char), (len + 1));
 	ft_memset(dest, 0, sizeof(char) * (len + 1));
 	if (!dest)
 		return (NULL);
