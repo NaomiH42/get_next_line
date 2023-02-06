@@ -1,33 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ehasalu <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/02/06 11:49:40 by ehasalu           #+#    #+#             */
-/*   Updated: 2023/02/06 18:27:48 by ehasalu          ###   ########.fr       */
+/*   Created: 2023/01/24 22:49:47 by ehasalu           #+#    #+#             */
+/*   Updated: 2023/01/25 20:07:40 by ehasalu          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
-#include <stdio.h>
-#include <fcntl.h>
+#ifndef GET_NEXT_LINE_BONUS_H
+# define GET_NEXT_LINE_BONUS_H
 
-int	main(void)
-{
-	int fd = open("file", O_RDONLY);
+# include <stdlib.h>
+# include <unistd.h>
+# include <stddef.h>
 
-	int	i = 0;
-	char *l = get_next_line(fd);
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 10
+# endif
 
-	while (i < 20)
-	{
-		printf("{%s}\n", l);
-		free(l);
-		l = get_next_line(fd);
-		i++;
-	}
-	close(fd);
-}
+char	*get_next_line(int fd);
+char	*ft_strjoin(char *s1, char *s2);
+char	*ft_strdup(char *s);
+size_t	ft_strlen(char *s);
+char	*ft_strchr(char *s, int c);
+void	*ft_calloc(size_t nmemb, size_t size);
 
+#endif

@@ -10,9 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
-char	*trim(char *line)
+void	trim(char **line)
 {
 	size_t	l;
 	size_t	i;
@@ -20,27 +20,21 @@ char	*trim(char *line)
 
 	i = 0;
 	l = 0;
-	while ((line)[i] != '\n' && (line)[i])
+	while ((*line)[i] != '\n' && (*line)[i])
 		i++;
-	if ((line)[i] == '\n')
+	if ((*line)[i] == '\n')
 		i++;
-	if (ft_strlen(line) - i == 0)
-	{
-		free(line);
-		return (NULL);
-	}
-	trimmed = (char *)ft_calloc((ft_strlen(line) - i + 1), sizeof(char));
+	trimmed = (char *)ft_calloc(sizeof(char), (ft_strlen(*line) - i + 1));
 	if (!trimmed)
-		return (NULL);	
-	while ((line)[i])
+		return ;
+	while ((*line)[i])
 	{
-		trimmed[l] = (line)[i];
+		trimmed[l] = (*line)[i];
 		i++;
 		l++;
 	}
-	trimmed[l] = '\0';
-	free(line);
-	return (trimmed);
+	free(*line);
+	*line = trimmed;
 }
 
 char	*cut_extra(char *line)
@@ -116,6 +110,6 @@ char	*get_next_line(int fd)
 	if (!buf[fd])
 		buf[fd] = (char *)ft_calloc(sizeof(char), (BUFFER_SIZE + 1));
 	line = read_fd(&buf[fd], fd);
-	buf[fd] = trim(buf[fd]);
+	trim(&buf[fd]);
 	return (line);
 }

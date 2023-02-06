@@ -24,11 +24,6 @@ char	*trim(char *line)
 		i++;
 	if ((line)[i] == '\n')
 		i++;
-	if (ft_strlen(line) - i == 0)
-	{
-		free(line);
-		return (NULL);
-	}
 	trimmed = (char *)ft_calloc((ft_strlen(line) - i + 1), sizeof(char));
 	if (!trimmed)
 		return (NULL);	
