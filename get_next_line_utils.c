@@ -14,9 +14,12 @@
 
 void	*ft_calloc(size_t nmemb, size_t size)
 {
-	void	*temp;
-	size_t	test;
+	unsigned int	i;
+	void			*temp;
+	size_t			test;
+	int				c;
 
+	c = 0;
 	if (nmemb == 0 || size == 0)
 	{
 		temp = malloc(0);
@@ -28,7 +31,12 @@ void	*ft_calloc(size_t nmemb, size_t size)
 	temp = malloc(size * nmemb);
 	if (!temp)
 		return (NULL);
-	ft_memset(temp, 0, size * nmemb);
+	i = 0;
+	while (i < (size * nmemb))
+	{
+		((unsigned char *)temp)[i] = (unsigned char)c;
+		i++;
+	}
 	return (temp);
 }
 
@@ -82,17 +90,22 @@ char	*ft_strjoin(char *s1, char *s2)
 	return (res);
 }
 
-
-
-void	*ft_memset(void *s, int c, size_t n)
+char	*ft_strdup(char *s)
 {
-	unsigned int	i;
+	size_t	i;
+	size_t	len;
+	char	*dest;
 
+	len = ft_strlen(s);
 	i = 0;
-	while (i < n)
+	dest = (char *)ft_calloc(sizeof(char), (len + 1));
+	if (!dest)
+		return (NULL);
+	while (s[i])
 	{
-		((unsigned char *)s)[i] = (unsigned char)c;
+		dest[i] = s[i];
 		i++;
 	}
-	return (s);
+	dest[i] = '\0';
+	return (dest);
 }

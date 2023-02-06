@@ -10,30 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
-char	*ft_strdup(char *s)
-{
-	size_t	i;
-	size_t	len;
-	char	*dest;
-
-	len = ft_strlen(s);
-	i = 0;
-	dest = (char *)ft_calloc(sizeof(char), (len + 1));
-	ft_memset(dest, 0, sizeof(char) * (len + 1));
-	if (!dest)
-		return (NULL);
-	while (s[i])
-	{
-		dest[i] = s[i];
-		i++;
-	}
-	dest[i] = '\0';
-	return (dest);
-}
-
-void trim(char **line)
+void	trim(char **line)
 {
 	size_t	l;
 	size_t	i;
@@ -47,7 +26,7 @@ void trim(char **line)
 		i++;
 	trimmed = (char *)ft_calloc(sizeof(char), (ft_strlen(*line) - i + 1));
 	if (!trimmed)
-		return;
+		return ;
 	while ((*line)[i])
 	{
 		trimmed[l] = (*line)[i];
@@ -71,7 +50,6 @@ char	*cut_extra(char *line)
 	if (line[i] == '\n')
 		i++;
 	ret = (char *)ft_calloc(sizeof(char), (i + 1));
-	//ft_memset(ret, 0, sizeof(char) * (i + 2));
 	while (l < i)
 	{
 		ret[l] = line[l];
@@ -82,9 +60,21 @@ char	*cut_extra(char *line)
 	return (ret);
 }
 
+void	extra_fnc(int bytes, char **temp, char **line, char **buffer)
+{
+	(*temp)[bytes] = '\0';
+	*line = ft_strjoin(*line, *temp);
+	if (buffer != NULL)
+	{
+		free(*buffer);
+		*buffer = ft_strdup("");
+	}
+	*buffer = ft_strjoin(*buffer, *temp);
+}
+
 char	*read_fd(char **buffer, int fd)
 {
-	int	bytes;
+	int		bytes;
 	char	*line;
 	char	*temp;
 
@@ -95,23 +85,16 @@ char	*read_fd(char **buffer, int fd)
 		return (NULL);
 	while (ft_strchr(*buffer, '\n') == NULL)
 	{
-		bytes = read(fd ,temp, BUFFER_SIZE);
+		bytes = read(fd, temp, BUFFER_SIZE);
 		if (bytes <= 0)
 		{
 			free(temp);
 			if (ft_strlen(line) != 0)
-				return(cut_extra(line));	
-			free(line);
-			return(NULL);
+				return (cut_extra(line));
+			free (line);
+			return (NULL);
 		}
-		temp[bytes] = '\0';
-		line = ft_strjoin(line, temp);
-		if (buffer != NULL)
-		{
-			free(*buffer);
-			*buffer = ft_strdup("");
-		}
-		*buffer = ft_strjoin(*buffer, temp);
+		extra_fnc(bytes, &temp, &line, buffer);
 	}
 	free(temp);
 	return (cut_extra(line));
@@ -120,14 +103,12 @@ char	*read_fd(char **buffer, int fd)
 char	*get_next_line(int fd)
 {
 	static char	*buf[2048];
-	char	*line;
+	char		*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0 || fd > 256)
 		return (NULL);
 	if (!buf[fd])
-	{
-		buf[fd] = (char *)ft_calloc(sizeof(char), (BUFFER_SIZE + 1));	
-	}
+		buf[fd] = (char *)ft_calloc(sizeof(char), (BUFFER_SIZE + 1));
 	line = read_fd(&buf[fd], fd);
 	trim(&buf[fd]);
 	return (line);
